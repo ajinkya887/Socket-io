@@ -9,7 +9,7 @@ const UserNameForm = ({ onSubmit }) => {
   };
 
   return (
-    <div className=" flex items-center justify-center bg-gradient-to-t from-sky-300 to-indigo-300 p-25 shadow-2xl/30">
+    <div className="h-screen w-screen overflow-hidden flex items-center justify-center bg-gradient-to-t from-sky-300 to-indigo-300 ">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm flex flex-col gap-4"
@@ -25,7 +25,7 @@ const UserNameForm = ({ onSubmit }) => {
         />
         <button
           type="submit"
-          className="text-black font-bold py-2 px-6 rounded-lg shadow-md transition transform hover:scale-105"
+          className="text-black  bg-fuchsia-300 font-bold py-2 px-6 rounded-lg shadow-md transition transform hover:scale-105"
         >
           Join
         </button>

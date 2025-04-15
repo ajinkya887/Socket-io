@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IoSend } from "react-icons/io5";
+import { GrSend } from "react-icons/gr";
 
 const MessageInput = ({ onSend }) => {
   const [msg, setMsg] = useState("");
@@ -25,9 +25,9 @@ const MessageInput = ({ onSend }) => {
       />
       <button
         type="submit"
-        className="text-black bg-blue-500 hover:bg-blue-600 p-2 rounded-full transition-all"
+        className="text-black bg-blue-300 hover:bg-blue-200 p-2 rounded-full transition-all"
       >
-        <IoSend className="w-6 h-6" />
+        <GrSend className="w-6 h-6" />
       </button>
     </form>
   );

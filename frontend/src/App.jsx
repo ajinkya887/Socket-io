@@ -16,6 +16,10 @@ function App() {
       setMessages((prev) => [...prev, msg]);
     });
 
+    socket.on("chat history", (history) => {
+      setMessages(history);
+    });
+
     return () => {
       socket.off("chat message");
     };
@@ -33,7 +37,7 @@ function App() {
   if (!username) return <UsernameForm onSubmit={handleJoin} />;
 
   return (
-    <div className="min-h-screen min-w-full bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center p-4">
+    <div className="h-screen w-screen overflow-scroll bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col gap-4">
         <h2 className="text-3xl font-bold text-center text-gray-800">
           Socket.io Implementation
@@ -44,7 +48,7 @@ function App() {
         </h2>
 
         <div>
-          <ChatWindow messages={messages} />
+          <ChatWindow messages={messages} currentUser={username} />
         </div>
 
         <div className="mt-4">

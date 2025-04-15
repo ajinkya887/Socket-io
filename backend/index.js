@@ -3,6 +3,11 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const chatHandler = require("./Socket/chatHandler");
+const connectDB = require("./config/db");
+const dotenv = require("dotenv");
+
+dotenv.config();
+connectDB();
 
 const app = express();
 app.use(cors());
