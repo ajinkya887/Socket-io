@@ -34,6 +34,15 @@ function chatHandler(io, socket) {
       console.error("Failed to save message:", err.message);
     }
   });
+
+  socket.on("typing", () => {
+    socket.broadcast.emit("typing", socket.username);
+  });
+
+  socket.on("stop typing", (username) => {
+    socket.broadcast.emit("stop typing", username);
+  });
+
   socket.on("disconnect", () => {
     if (socket.username) {
       io.emit("chat message", {

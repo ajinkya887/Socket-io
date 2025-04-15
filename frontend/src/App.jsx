@@ -7,9 +7,13 @@ import UsernameForm from "./Components/UserNameForm";
 
 const socket = io("http://localhost:3000");
 
+let typingTimeout;
+
 function App() {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
+  const [typingUser, setTypingUser] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     socket.on("chat message", (msg) => {
@@ -20,10 +24,25 @@ function App() {
       setMessages(history);
     });
 
+    socket.on("typing", (user) => {
+      if (user !== username) {
+        setTypingUser(user);
+      }
+    });
+
+    socket.on("stop typing", (user) => {
+      if (user === typingUser) {
+        setTypingUser("");
+      }
+    });
+
     return () => {
       socket.off("chat message");
+      socket.off("chat history");
+      socket.off("typing");
+      socket.off("stop typing");
     };
-  }, []);
+  }, [username, typingUser]);
 
   const handleJoin = (name) => {
     setUsername(name);
@@ -32,6 +51,19 @@ function App() {
 
   const handleSend = (msg) => {
     socket.emit("chat message", msg);
+    setMessage("");
+    socket.emit("stop typing", username);
+  };
+
+  const handleTyping = (e) => {
+    const val = e.target.value;
+    setMessage(val);
+    socket.emit("typing", username);
+
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+      socket.emit("stop typing", username);
+    }, 1000);
   };
 
   if (!username) return <UsernameForm onSubmit={handleJoin} />;
@@ -47,13 +79,17 @@ function App() {
           <span className="font-semibold text-indigo-600">{username}</span>
         </h2>
 
-        <div>
-          <ChatWindow messages={messages} currentUser={username} />
-        </div>
+        <ChatWindow
+          messages={messages}
+          currentUser={username}
+          typingUser={typingUser}
+        />
 
-        <div className="mt-4">
-          <MessageInput onSend={handleSend} />
-        </div>
+        <MessageInput
+          value={message}
+          onChange={handleTyping}
+          onSend={handleSend}
+        />
       </div>
     </div>
   );

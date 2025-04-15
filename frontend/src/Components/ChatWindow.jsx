@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChatWindow = ({ messages, currentUser }) => {
+const ChatWindow = ({ messages, currentUser, typingUser }) => {
   return (
     <div className="border border-gray-200 p-4 h-80 overflow-y-auto rounded-xl bg-gray-50 space-y-2">
       {messages.map((msg, idx) => {
@@ -11,7 +11,7 @@ const ChatWindow = ({ messages, currentUser }) => {
             className={`flex ${isOwnMessage ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`px-4 py-2 w-auto rounded-2xl  shadow ${
+              className={`px-4 py-2 w-auto rounded-2xl shadow ${
                 isOwnMessage
                   ? "bg-green-100 text-right text-gray-800"
                   : "bg-blue-100 text-left text-gray-800"
@@ -19,16 +19,24 @@ const ChatWindow = ({ messages, currentUser }) => {
             >
               <strong>{msg.user}:</strong> {msg.text}
               <span className="block text-[10px] text-gray-500 mt-1">
-                {new Date(msg.timestamp).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                })}
+                {msg.timestamp
+                  ? new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    })
+                  : ""}
               </span>
             </div>
           </div>
         );
       })}
+
+      {typingUser && (
+        <div className="text-sm italic text-gray-500">
+          {typingUser} is typing...
+        </div>
+      )}
     </div>
   );
 };
