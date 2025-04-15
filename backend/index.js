@@ -5,6 +5,7 @@ const cors = require("cors");
 const chatHandler = require("./Socket/chatHandler");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
+const downloadChats = require("./Routes/DownloadRoutes");
 
 dotenv.config();
 connectDB();
@@ -24,6 +25,8 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   chatHandler(io, socket);
 });
+
+app.use("/download-chats", downloadChats);
 
 server.listen(3000, () => {
   console.log("Server running on port: 3000");

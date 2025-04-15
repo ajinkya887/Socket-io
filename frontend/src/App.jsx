@@ -4,8 +4,9 @@ import io from "socket.io-client";
 import ChatWindow from "./Components/ChatWindow";
 import MessageInput from "./Components/MessageInput";
 import UsernameForm from "./Components/UserNameForm";
+import { APIUrl } from "../utils";
 
-const socket = io("http://localhost:3000");
+const socket = io(APIUrl);
 
 let typingTimeout;
 
@@ -66,6 +67,34 @@ function App() {
     }, 1000);
   };
 
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(`${APIUrl}/download-chats`, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to download PDF");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "chat_history.pdf";
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      alert("Chats downloaded successfully..");
+    } catch (err) {
+      console.error("Download error:", err);
+      alert("Could not download chat history.");
+    }
+  };
+
   if (!username) return <UsernameForm onSubmit={handleJoin} />;
 
   return (
@@ -90,6 +119,14 @@ function App() {
           onChange={handleTyping}
           onSend={handleSend}
         />
+        <div className="flex justify-center">
+          <button
+            onClick={handleDownload}
+            className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md transition-all"
+          >
+            Download Chat History
+          </button>
+        </div>
       </div>
     </div>
   );
