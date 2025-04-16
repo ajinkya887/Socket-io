@@ -67,34 +67,6 @@ function App() {
     }, 1000);
   };
 
-  const handleDownload = async () => {
-    try {
-      const response = await fetch(`${APIUrl}/download-chats`, {
-        method: "GET",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to download PDF");
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "chat_history.pdf";
-      document.body.appendChild(link);
-      link.click();
-
-      link.remove();
-      window.URL.revokeObjectURL(url);
-      alert("Chats downloaded successfully..");
-    } catch (err) {
-      console.error("Download error:", err);
-      alert("Could not download chat history.");
-    }
-  };
-
   if (!username) return <UsernameForm onSubmit={handleJoin} />;
 
   return (
@@ -120,12 +92,13 @@ function App() {
           onSend={handleSend}
         />
         <div className="flex justify-center">
-          <button
-            onClick={handleDownload}
-            className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md transition-all"
+          <a
+            href={`${APIUrl}/download-chats`}
+            className="bg-indigo-200 hover:bg-indigo-300 text-blue-600 px-4 py-2 rounded-lg shadow-md transition-all"
+            download
           >
             Download Chat History
-          </button>
+          </a>
         </div>
       </div>
     </div>
