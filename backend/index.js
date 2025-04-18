@@ -6,7 +6,7 @@ const chatHandler = require("./Socket/chatHandler");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 const downloadChats = require("./Routes/DownloadRoutes");
-
+const roomRoutes = require("./Routes/roomRoutes");
 dotenv.config();
 connectDB();
 
@@ -25,6 +25,8 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   chatHandler(io, socket);
 });
+
+app.use("/rooms", roomRoutes);
 
 app.use("/download-chats", downloadChats);
 

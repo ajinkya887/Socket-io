@@ -15,6 +15,21 @@ function App() {
   const [username, setUsername] = useState("");
   const [typingUser, setTypingUser] = useState("");
   const [message, setMessage] = useState("");
+  const [rooms, setRooms] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState("");
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const res = await fetch(`${APIUrl}/rooms`);
+        const data = await res.json();
+        setRooms(data);
+      } catch (err) {
+        console.log("failed to fetch rooms: ", err);
+      }
+    };
+    fetchRooms();
+  }, []);
 
   useEffect(() => {
     socket.on("chat message", (msg) => {
@@ -45,11 +60,6 @@ function App() {
     };
   }, [username, typingUser]);
 
-  const handleJoin = (name) => {
-    setUsername(name);
-    socket.emit("join", name);
-  };
-
   const handleSend = (msg) => {
     socket.emit("chat message", msg);
     setMessage("");
@@ -67,13 +77,23 @@ function App() {
     }, 1000);
   };
 
-  if (!username) return <UsernameForm onSubmit={handleJoin} />;
+  if (!username || !selectedRoom)
+    return (
+      <UsernameForm
+        rooms={rooms}
+        onSubmit={(name, room) => {
+          setUsername(name);
+          setSelectedRoom(room);
+          socket.emit("join", { username: name, room });
+        }}
+      />
+    );
 
   return (
     <div className="h-screen w-screen overflow-scroll bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col gap-4">
         <h2 className="text-3xl font-bold text-center text-gray-800">
-          Socket.io Implementation
+          Room: <span className="text-indigo-600">{selectedRoom}</span>
         </h2>
         <h2 className="text-lg text-center text-gray-600">
           Welcome,{" "}
