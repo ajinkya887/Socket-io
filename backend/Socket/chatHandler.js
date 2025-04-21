@@ -3,7 +3,7 @@ const Message = require("../models/Message");
 const rooms = ["General", "PHI", "FLIP", "TRAX", "Zydus"];
 
 function chatHandler(io, socket) {
-  console.log("User connected:", socket.id);
+  console.log("Socket id:", socket.id);
 
   // Handle user joining a room
   socket.on("join", async ({ username, room }) => {
@@ -29,7 +29,7 @@ function chatHandler(io, socket) {
   });
 
   // Handle sending messages
-  socket.on("chat message", async (text, room) => {
+  socket.on("chat message", async (text) => {
     const messageData = {
       user: socket.username,
       text,

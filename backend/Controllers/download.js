@@ -3,21 +3,31 @@ const Message = require("../models/Message");
 
 const downloadChats = async (req, res) => {
   try {
-    const messages = await Message.find().sort({ timestamp: 1 });
+    const { room } = req.query;
+    const messages = await Message.find({ room }).sort({ timestamp: 1 });
 
     const doc = new PDFDocument();
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=chat_history.pdf"
+      `attachment; filename=chat_history ${room}.pdf`
     );
     res.setHeader("Content-Type", "application/pdf");
 
     doc.pipe(res);
 
-    doc.fontSize(20).text("Chat History", { align: "center" }).moveDown(1.5);
+    doc
+      .fontSize(20)
+      .text(`Chat History - ${room}`, { align: "center" })
+      .moveDown(1.5);
 
     messages.forEach((msg) => {
-      const time = new Date(msg.timestamp).toLocaleTimeString([], {
+      const dateObj = new Date(msg.timestamp);
+      const day = dateObj.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+      const time = dateObj.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
@@ -25,7 +35,7 @@ const downloadChats = async (req, res) => {
 
       doc
         .fontSize(12)
-        .text(`[${time}] ${msg.user}: ${msg.text}`, {
+        .text(`[${day} ${time}] ${msg.user}: ${msg.text}`, {
           width: 500,
           align: "left",
         })
