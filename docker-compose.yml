@@ -12,7 +12,7 @@ services:
     image: ajinkya04/socketio-frontend
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "5173:5174"
     depends_on:
       - backend
     restart: always
