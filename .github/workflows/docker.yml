@@ -24,10 +24,10 @@ jobs:
 
       - name: Build and Push Backend Image
         run: |
-          docker build -t ./backend/
+          docker build -t  ajinkya04/socketio-backend ./backend
           docker push ajinkya04/socketio-backend
 
       - name: Build and Push Frontend Image
         run: |
-          docker build -t ./frontend/
+          docker build -t ajinkya04/socketio-frontend ./frontend/
           docker push ajinkya04/socketio-frontend
