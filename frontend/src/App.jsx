@@ -6,6 +6,7 @@ import MessageInput from "./Components/MessageInput";
 import UsernameForm from "./Components/UserNameForm";
 import { APIUrl } from "../utils";
 import ErrorBoundaries from "./Components/ErrorBoundaries";
+import Footer from "./Components/Footer";
 
 const socket = io(APIUrl);
 
@@ -92,37 +93,41 @@ function App() {
 
   return (
     <ErrorBoundaries>
-      <div className="h-screen w-screen overflow-scroll bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center">
-        <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col gap-4">
-          <h2 className="text-3xl font-bold text-center text-gray-800">
-            Room: <span className="text-indigo-600">{selectedRoom}</span>
-          </h2>
-          <h2 className="text-lg text-center text-gray-600">
-            Welcome,{" "}
-            <span className="font-semibold text-indigo-600">{username}</span>
-          </h2>
+      <div className="h-screen w-screen bg-gradient-to-br from-sky-500 to-indigo-500 flex flex-col">
+        <div className="flex-grow flex items-center justify-center overflow-auto">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6 flex flex-col gap-4">
+            <h2 className="text-3xl font-bold text-center text-gray-800">
+              Room: <span className="text-indigo-600">{selectedRoom}</span>
+            </h2>
+            <h2 className="text-lg text-center text-gray-600">
+              Welcome,{" "}
+              <span className="font-semibold text-indigo-600">{username}</span>
+            </h2>
 
-          <ChatWindow
-            messages={messages}
-            currentUser={username}
-            typingUser={typingUser}
-          />
+            <ChatWindow
+              messages={messages}
+              currentUser={username}
+              typingUser={typingUser}
+            />
 
-          <MessageInput
-            value={message}
-            onChange={handleTyping}
-            onSend={handleSend}
-          />
-          <div className="flex justify-center">
-            <a
-              href={`${APIUrl}/download-chats?room=${selectedRoom}`}
-              className="bg-indigo-200 hover:bg-indigo-300 text-blue-600 px-4 py-2 rounded-lg shadow-md transition-all"
-              download
-            >
-              Download Chat History
-            </a>
+            <MessageInput
+              value={message}
+              onChange={handleTyping}
+              onSend={handleSend}
+            />
+
+            <div className="flex justify-center">
+              <a
+                href={`${APIUrl}/download-chats?room=${selectedRoom}`}
+                className="bg-indigo-200 hover:bg-indigo-300 text-blue-600 px-4 py-2 rounded-lg shadow-md transition-all"
+                download
+              >
+                Download Chat History
+              </a>
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
     </ErrorBoundaries>
   );
